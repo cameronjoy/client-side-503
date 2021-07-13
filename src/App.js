@@ -22,6 +22,8 @@ import {
   useEffect
 } from 'react'
 
+import parks from './components/ParkResult'
+
 import jwt from 'jsonwebtoken'
 
 let API_KEY = process.env.REACT_APP_API_KEY
@@ -29,6 +31,7 @@ let API_KEY = process.env.REACT_APP_API_KEY
 function App() {
   // state holds user data if the user is logged in
   const [currentUser, setCurrentUser] = useState(null)
+  
 
   // if navigates away automatically log them in (if the jwt is valid)
   useEffect(() => {
@@ -100,7 +103,7 @@ function App() {
 
           <Route 
             path="/results"
-            render={() => <ParkResult results={results} />}
+            render={() => <ParkResult results={results} parks={parks}/>}
           />
 
           <Route path="/park/parkCode">
