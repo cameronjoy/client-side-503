@@ -1,37 +1,55 @@
+
+import axios from 'axios' 
+
 import {
+    BrowserRouter as Router,
+    Switch,
+    Route, 
+    Redirect, 
     useParams
   } from 'react-router-dom'
-  import { 
-    useState, 
-    useEffect 
+  
+  import {
+    useState,
+    useEffect
   } from 'react'
-  import axios from 'axios'
 
   import {Container, Row, Col} from 'react-bootstrap'
 
   let API_KEY = process.env.REACT_APP_API_KEY
 
+export default function Park(props) {
 
-  
-export default function Park() {
-    const {parkCode} = useParams()
+    const [indvPark, setIndvPark] = useState([])
 
-    const [post, setPost] = useState([])
-
+    const {id} = useParams()
+    
+    console.log({id}.id)
+    // console.log(props.match.params.id)
     useEffect (() => {
-      async function getPost() {
-        try{
-          const url = `https://developer.nps.gov/api/v1/parks/?parkCode=${parkCode}limit=600&api_key=${API_KEY}`
-          const response = await axios.get(url)
-        
-          setPost(response.data.data)
-          console.log('inside the park.jsx' + response.data)
-        } catch (err) {
-          console.log(err)
+        async function getState() {
+          try{
+            const response = await axios.get(`https://developer.nps.gov/api/v1/parks?parkCode=${id}&api_key=${API_KEY}`)
+            
+            
+            console.log(response.data.fullName)
+            
+            console.log(response.data.data[0])
+
+            setIndvPark(response.data.data[0])
+            
+            
+
+
+          } catch (err) {
+            console.log(err)
+          }
         }
-      }
-      getPost()
-    }, [])
+        getState()
+      }, [])
+
+     
+   
 
     const park = {
         fullName: "Abraham Lincoln National Historic Park",
@@ -57,36 +75,13 @@ export default function Park() {
 
     return(
         <div>
-            <img src={park.image} alt="" width="800px"/>
-            <h2>{park.fullName}</h2>
-            <Container>
-                <Row>
-                    <Col xs={8}>
-                        <p>United States of America/ Kentucky/ Abraham Lincoln National Historic Park</p>
-                        <h4>Alerts & Conditions</h4>
-                        <p>{park.alerts}</p>
-                        <p>Open {park.hours}</p>
-                        <h4>Description</h4>
-                        <p>{park.description}</p>
-                    </Col>
-
-
-                    <Col>
-                    <h4>Basic Information</h4>
-                    <h6>Fees & Passes ></h6>
-                    <h6>Operating Hours ></h6>
-                    <h6>Weather ></h6>
-
-                    <div>
-                        <h4>Activities / Amenities</h4>
-                        
-                    </div>
-
-                    </Col>
-                </Row>
-            </Container>
-
-            
+            <h1>{indvPark.fullName}</h1>
+            <p>{indvPark.description}</p>
+            <p>{indvPark.directionsInfo}</p>
+            <p>{indvPark.directionsUrl}</p>
+            <p>{indvPark.weatherInfo}</p>
+            <p>{indvPark.url}</p>
+           
         </div>
     )
 }

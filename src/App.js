@@ -64,6 +64,7 @@ function App() {
         try{
           const response = await axios.get(`https://developer.nps.gov/api/v1/parks?limit=600&api_key=${API_KEY}`)
           setResults(response.data.data)
+          console.log('testing testing testing')
           console.log(response.data)
         } catch (err) {
           console.log(err)
@@ -71,6 +72,8 @@ function App() {
       }
       getPost()
     }, [])
+
+
 
   return (
     <Router>
@@ -82,7 +85,7 @@ function App() {
         <Switch>
           <Route 
             exact path="/"
-            component={HomeLayout}
+            render={() => <HomeLayout results={results} setResults={setResults}/>}
           />
 
           <Route 
@@ -105,10 +108,10 @@ function App() {
             path="/results"
             render={() => <ParkResult results={results} parks={parks}/>}
           />
-
-          <Route path="/park/parkCode">
-            <Park />
-          </Route>
+          <Route 
+            exact path="/park/:id"
+            render={() => <Park results={results} />}
+          />
           
         </Switch>
       </div>
